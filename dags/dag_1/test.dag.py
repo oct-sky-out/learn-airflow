@@ -3,12 +3,13 @@ from datetime import timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
+import pendulum
 
 with DAG(
     'test',
     description='A simple tutorial DAG',
-    schedule_interval=timedelta(days=1),
-    start_date=days_ago(2),
+    schedule=timedelta(days=1),
+    start_date=pendulum.today('UTC').add(days=-2),
     tags=['dag_1'],
 ) as dag:
     python_task = PythonOperator(

@@ -5,11 +5,11 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
 
-from airflow.utils.dates import days_ago
+import pendulum
 
 with DAG(dag_id='wikipedia_view_analyze',
-         start_date=days_ago(1),
-         schedule_interval="@hourly",
+         start_date=pendulum.today('UTC').add(days=-1),
+         schedule="@hourly",
          catchup=False,
          tags=['dag_2'],
          ) as dag:
