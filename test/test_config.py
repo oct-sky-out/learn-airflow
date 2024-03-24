@@ -27,3 +27,5 @@ def test_dag_integrately(dag_file):
         check_cycle(dag)
     
     assert dag_objs
+    
+
