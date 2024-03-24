@@ -1,6 +1,7 @@
-import datetime
+from datetime import datetime, timedelta
 from unittest import TestCase, mock
 from airflow.models import DagBag
+import pendulum
 
 def test_dag_loading():
     dag_bag = DagBag(dag_folder='dags',include_examples=False)
@@ -28,10 +29,10 @@ class TestDagBackTestDag(TestCase):
     def test_task_execution(self, mock_execute):
         dag_bag = DagBag(dag_folder='dags',include_examples=False)
         
-        DEFAULT_DATE = datetime.now() + datetime.timedelta(seconds=-10)
+        DEFAULT_DATE = pendulum.now('UTC').add(seconds=-5)
         dag_bag.get_dag('test').get_task('start').run(start_date=DEFAULT_DATE, end_date=DEFAULT_DATE)
         
-        DEFAULT_DATE2 = DEFAULT_DATE + datetime.timedelta(seconds=-5)
-        dag_bag.get_dag('test').get_task('print_messages').run(start_date=DEFAULT_DATE2, end_date=DEFAULT_DATE2)
+        DEFAULT_DATE2 = pendulum.now('UTC').add(seconds=-3)
+        dag_bag.get_dag('test').get_task('print_messages').run(start_date=DEFAULT_DATE, end_date=DEFAULT_DATE2)
         
         assert mock_execute.call_count == 1
