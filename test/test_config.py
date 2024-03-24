@@ -1,5 +1,6 @@
 import glob
 import importlib.util
+import logging
 import os
 from airflow import DAG
 import pytest
@@ -7,6 +8,11 @@ from airflow.utils.dag_cycle_tester import check_cycle
 
 DAG_PATH = os.path.join(os.path.dirname(__file__), "..", 'dags/**/*.py')
 DAG_FILES = glob.glob(DAG_PATH, recursive=True)
+
+logger = logging.getLogger("test_config")
+
+def test_print_DAG_FILES() :
+    logger.debug(len(DAG_FILES))
 
 @pytest.mark.parametrize('dag_file', DAG_FILES)
 def test_dag_integrately(dag_file):
@@ -21,6 +27,3 @@ def test_dag_integrately(dag_file):
         check_cycle(dag)
     
     assert dag_objs
-    
-def test():
-    assert 1 == 1
