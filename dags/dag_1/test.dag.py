@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.empty import EmptyOperator
 from airflow.utils.dates import days_ago
 import pendulum
 
@@ -12,6 +13,8 @@ with DAG(
     start_date=pendulum.today('UTC').add(days=-2),
     tags=['dag_1'],
 ) as dag:
+    start = EmptyOperator(task_id='start')
+    
     python_task = PythonOperator(
         task_id="print_messages",
         python_callable=lambda: print('Hi from python operator'),
@@ -21,4 +24,6 @@ with DAG(
         # templates_exts: Optional[List] = None
     )
 
-    python_task;
+    end = EmptyOperator(task_id='end')
+
+    start >> python_task >> end;
